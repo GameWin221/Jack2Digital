@@ -13,50 +13,6 @@
 const uint32_t SAMPLE_COUNT = 64 / sizeof(uint16_t);
 const uint32_t SAMPLE_RATE = 16000;// In Hz
 
-void core1_main() {
-    static uint16_t sample_buf[SAMPLE_COUNT];
-    uint32_t i{};
-
-    while(true) {
-        tud_task();
-
-        //if(multicore_fifo_pop_timeout_us(1, &sample)) {
-        if(!adc_fifo_is_empty()) {
-            uint16_t sample = adc_fifo_get();
-
-            if (tud_cdc_ready() && tud_cdc_connected()) {
-                gpio_put(PICO_DEFAULT_LED_PIN, 1);
-                sample_buf[i++] = sample;
-            }
-        }
-
-        if (!tud_cdc_connected()) {
-            gpio_put(PICO_DEFAULT_LED_PIN, 0);
-            continue;
-        }
-        /*
-        if(i == SAMPLE_COUNT) {
-            // Make sure to write only when host reads
-            while(!tud_cdc_ready());
-            
-            //fwrite(sample_buf, 1, SAMPLE_COUNT * sizeof(uint16_t), stdout);
-            //fflush(stdout);
-            tud_cdc_write(sample_buf, SAMPLE_COUNT * sizeof(uint16_t));
-            //tud_cdc_write_flush(); // no need to flush because tusb will do it anyway each 64 bytes
-            i = 0;
-            
-        }
-            */
-    }
-}
-
-//bool timer_callback(repeating_timer *t) {
-//    uint32_t val = (uint32_t)adc_read();
-//    multicore_fifo_push_blocking(val);
-//
-//    return true;
-//}
-
 int main() {
     stdio_init_all();
     tusb_init();
