@@ -1,6 +1,6 @@
 # Jack2Digital
 
-Personal project to eventally be able to play my digital piano (that only has an analog Jack output) in silence. I had no idea about analog audio when I started this project so expect major improvements over time as I learn more. 
+Personal project to eventually be able to play my digital piano (that only has an analog Jack output) in silence. I had no idea about analog audio when I started this project so expect major improvements over time as I learn more. 
 
 Take a look at the samples directory - There you can find interesting "milestones" of this project.
 

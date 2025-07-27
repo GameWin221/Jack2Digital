@@ -7,6 +7,7 @@
 #include <cmath>
 #include <cstdint>
 #include <cstring>
+#include "tusb_config.h"
 #include "tusb.h"
 
 // As long as HIGH_SPEED mode is not enabled, keep 64 bytes
@@ -16,16 +17,13 @@ const uint32_t SAMPLE_RATE = 16000;// In Hz
 int main() {
     stdio_init_all();
     tusb_init();
-    tud_init(0);
+    tud_init(BOARD_TUD_RHPORT);
 
     adc_init();
     adc_gpio_init(27);
     adc_select_input(1);
-
     adc_fifo_setup(true, false, 0, false, false);
 
-    //multicore_launch_core1(core1_main);
-    
     // Taken from rp2040 datasheet:
     /// ""
     // By default (DIV = 0), new conversions start immediately upon the previous conversion finishing, so a new sample is
@@ -56,9 +54,10 @@ int main() {
     while(true) {
         tud_task();
 
-        //if(multicore_fifo_pop_timeout_us(1, &sample)) {
         if(!adc_fifo_is_empty()) {
-            uint16_t sample = adc_fifo_get();
+            // Even if the serial connection is not ready, drain the FIFO
+            // Or I can just pause the ADC data sampling in tud_umount_cb()
+            uint16_t sample = adc_fifo_get(); 
 
             if (tud_cdc_ready() && tud_cdc_connected()) {
                 gpio_put(PICO_DEFAULT_LED_PIN, 1);
@@ -72,11 +71,6 @@ int main() {
         }
         
         if(i == SAMPLE_COUNT) {
-            // Make sure to write only when host reads
-            while(!tud_cdc_ready());
-            
-            //fwrite(sample_buf, 1, SAMPLE_COUNT * sizeof(uint16_t), stdout);
-            //fflush(stdout);
             tud_cdc_write(sample_buf, SAMPLE_COUNT * sizeof(uint16_t));
             //tud_cdc_write_flush(); // no need to flush because tusb will do it anyway each 64 bytes
             i = 0;  

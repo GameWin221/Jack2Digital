@@ -15,35 +15,39 @@ def transform(v: int) -> int:
 if __name__ == "__main__":
     ser = serial.Serial("COM7", 500000, xonxoff=False, rtscts=False, timeout=0.1, dsrdtr=False)
 
-    plt.ion()
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
-    line1, = ax.plot([], [], 'b-')
+    #plt.ion()
+    #fig = plt.figure()
+    #ax = fig.add_subplot(111)
+    #line1, = ax.plot([], [], 'b-')
     
     ser.reset_input_buffer()
     
     prevt = time.time() - 0.01
     
-    data = []
+    #data = []
+    data = np.zeros(SAMPLE_RATE * SAMPLE_TIME, dtype=np.int16)
+    idx = 0
+    nums = np.zeros(SAMPLE_COUNT, dtype=np.int16)
+    
     #while True:
-    for _ in range(SAMPLE_RATE // 32 * SAMPLE_TIME):
+    for _ in range(SAMPLE_RATE // SAMPLE_COUNT * SAMPLE_TIME):
         #if len(data) > 32 * BYTES_TO_READ:
         #   data = data[32:]
         
         raw = ser.read(BYTES_TO_READ)
-
+        
         if (len(raw) == BYTES_TO_READ):
-            nums = []
+            #nums = []
             for i in range(0, BYTES_TO_READ, 2):
-                nums.append(int.from_bytes(raw[i:i+2], 'little'))
+            #    nums.append(int.from_bytes(raw[i:i+2], 'little'))
+                nums[i//2] = int.from_bytes(raw[i:i+2], 'little')
                 
             a = sum(nums) // len(nums)
-            for i in range(len(nums)):
-                nums[i] -= a
-            #if(nums.count(1) != 32):
-            #    print(nums)
-            data.extend(nums)
+            nums -= a
+
+            data[idx:idx+32] = nums.copy()
             
+            idx += SAMPLE_COUNT
             if (len(nums) != SAMPLE_COUNT):
                 print("ERROR, len=", len(nums))
         else:
@@ -54,7 +58,7 @@ if __name__ == "__main__":
         prevt = now
         
         #xpoints = [i for i in range(len(data))]
-
+#
         #line1.set_xdata(xpoints)
         #line1.set_ydata(data)
         #plt.xlim(xpoints[0], xpoints[-1])
@@ -68,4 +72,4 @@ if __name__ == "__main__":
     #plt.pause(2.0)
     print(f"file created with {len(data)}samples at {SAMPLE_RATE}hz")
     fs = SAMPLE_RATE#44100 
-    wavf.write('out.wav', fs, np.array(data))
+    wavf.write('out.wav', fs, data)
