@@ -16,7 +16,12 @@ const uint32_t SAMPLE_RATE = 16000;// In Hz
 
 int main() {
     stdio_init_all();
-    tusb_init();
+    
+    tusb_rhport_init_t dev_init{
+        .role = TUSB_ROLE_DEVICE,
+        .speed = TUSB_SPEED_AUTO
+    };
+    tusb_init(BOARD_TUD_RHPORT, &dev_init);
     tud_init(BOARD_TUD_RHPORT);
 
     adc_init();

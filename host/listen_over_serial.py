@@ -13,7 +13,7 @@ def transform(v: int) -> int:
     return v
 
 if __name__ == "__main__":
-    ser = serial.Serial("COM7", 500000, xonxoff=False, rtscts=False, timeout=0.1, dsrdtr=False)
+    ser = serial.Serial("COM9", 500000, xonxoff=False, rtscts=False, timeout=0.1, dsrdtr=False)
 
     #plt.ion()
     #fig = plt.figure()

@@ -4,6 +4,16 @@ Personal project to eventually be able to play my digital piano (that only has a
 
 Take a look at the samples directory - There you can find interesting "milestones" of this project.
 
+## Features
+### Recording samples over USB
+By default the board works as an analog audio recorder and the `/host/listen_over_serial.py` script saves the samples at a given sample rate that matches that of board's.
+
+### Audio input device
+*I can't get any TinyUSB audio input examples to work on my Pico and PC so for now there is no way of using the board as an USB audio input device.*
+
+## Technical details
+Raspberry Pi Pico (RP2040) communicates with my PC over USB CDC using the TinyUSB library bundled with the Pico C SDK. The samples are collected via ADC running freely at a given frequency that matches the desired sample rate. The samples are stored in a FIFO queue and then collected in the main loop once a sample shows up. The samples are then sent in batches of 32 in order to always send exactly 64 bytes of data per USB packet. *(Afaik the ADC sample rate should be twice as high as the output sample rate at some point, I'll look into it)*
+
 ## Compiling it
 
 ### Prerequisites
@@ -48,4 +58,6 @@ All GNDs on the schematic refer to the AGND pin on the RPi Pico. The 1khz AC wav
 
 ### Final product
 
-*There will be a photo soon*
+![pic1](/images/pic2.jpg)
+
+![pic2](/images/pic1.jpg)
