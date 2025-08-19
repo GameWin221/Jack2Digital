@@ -12,7 +12,7 @@
 
 // As long as HIGH_SPEED mode is not enabled, keep 64 bytes
 const uint32_t SAMPLE_COUNT = 64 / sizeof(uint16_t);
-const uint32_t SAMPLE_RATE = 16000;// In Hz
+const uint32_t SAMPLE_RATE = 48000;// In Hz
 
 int main() {
     stdio_init_all();

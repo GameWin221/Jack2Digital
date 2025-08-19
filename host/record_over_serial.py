@@ -6,14 +6,14 @@ import time
 
 SAMPLE_COUNT = 32
 BYTES_TO_READ = SAMPLE_COUNT*2
-SAMPLE_TIME = 20
-SAMPLE_RATE = 16000
+SAMPLE_TIME = 10
+SAMPLE_RATE = 48000
 
 def transform(v: int) -> int:
     return v
 
 if __name__ == "__main__":
-    ser = serial.Serial("COM9", 500000, xonxoff=False, rtscts=False, timeout=0.1, dsrdtr=False)
+    ser = serial.Serial("COM9", 576000, xonxoff=False, rtscts=False, timeout=0.1, dsrdtr=False)
 
     #plt.ion()
     #fig = plt.figure()
@@ -22,7 +22,7 @@ if __name__ == "__main__":
     
     ser.reset_input_buffer()
     
-    prevt = time.time() - 0.01
+    prevt = time.time()
     
     #data = []
     data = np.zeros(SAMPLE_RATE * SAMPLE_TIME, dtype=np.int16)
@@ -44,6 +44,7 @@ if __name__ == "__main__":
                 
             a = sum(nums) // len(nums)
             nums -= a
+            nums *= 80
 
             data[idx:idx+32] = nums.copy()
             

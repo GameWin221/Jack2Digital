@@ -1,0 +1,1 @@
+I will probably rewrite the host side in Rust to ensure that the samples are always being received real-time.
