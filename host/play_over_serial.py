@@ -6,7 +6,7 @@ from multiprocessing import Process, Pipe
 
 SAMPLE_COUNT = 32
 BYTES_TO_READ = SAMPLE_COUNT*2
-SAMPLE_RATE = 48000
+SAMPLE_RATE = 16000
 
 def audio_player_loop(pipe):
     p = pyaudio.PyAudio()
@@ -17,7 +17,7 @@ def audio_player_loop(pipe):
         stream.write(data, SAMPLE_COUNT)
 
 if __name__ == "__main__":
-    ser = serial.Serial("COM9", 576000, xonxoff=False, rtscts=False, timeout=0.1, dsrdtr=False)
+    ser = serial.Serial("COM7", 1152000, xonxoff=False, rtscts=False, timeout=0.1, dsrdtr=False)
 
     parentp, childp = Pipe()  
     audio_process = Process(target=audio_player_loop, args=(childp, ))

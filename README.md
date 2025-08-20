@@ -1,6 +1,6 @@
 # Jack2Digital
 
-Personal project to eventually be able to play my digital piano (that only has an analog Jack output) in silence. I had no idea about analog audio when I started this project so expect major improvements over time as I learn more. 
+Personal project to eventually be able to play my digital piano (that only has an analog Jack output) in silence. I had no idea about analog audio when I had started this project so I learned (and I still am learning) quite a lot. 
 
 Take a look at the samples directory - There you can find interesting "milestones" of this project.
 
@@ -13,8 +13,10 @@ The board works as an analog audio recorder and the `/host/record_over_serial.py
 ### Real-time audio playback
 The board works as an "audio device" that you can hear in real-time through your PC.
 
+In both ways it can be used as an analog microphone recorder/player.
+
 ## Technical details
-Raspberry Pi Pico (RP2040) communicates with my PC over USB CDC using the TinyUSB library bundled with the Pico C SDK. The samples are collected via ADC running freely at a given frequency that matches the desired sample rate. The samples are stored in a FIFO queue and then collected in the main loop once a sample shows up. The samples are then sent in batches of 32 in order to always send exactly 64 bytes of data per USB packet. *(Afaik the ADC sample rate should be twice as high as the output sample rate at some point, I'll look into it)*
+Raspberry Pi Pico (RP2040) communicates with my PC over USB CDC using the TinyUSB library bundled with the Pico C SDK. The samples are collected via ADC running freely at a given frequency that matches the desired sample rate. The samples are written directly to the `sample_buf` buffer via DMA and once the buffer is filled, DMA issues an interrupt sending the whole buffer over USB. *(Afaik the ADC sample rate should be twice as high as the output sample rate and "interpolated" at some point, I'll look into it)*
 
 ## Compiling it
 

@@ -8,9 +8,9 @@ set(CMAKE_CXX_STANDARD 17)
 
 pico_sdk_init()
 
-add_executable(${PROJECT_NAME} src/main.cpp src/usb_descriptors.c src/tusb_config.h)
+add_executable(${PROJECT_NAME} src/main.cpp src/usb_descriptors.cpp src/tusb_config.h)
 target_include_directories(${PROJECT_NAME} PUBLIC src/)
-target_link_libraries(${PROJECT_NAME} pico_stdlib pico_multicore hardware_adc hardware_timer hardware_clocks hardware_rtc tinyusb_device tinyusb_board)
+target_link_libraries(${PROJECT_NAME} pico_stdlib pico_multicore hardware_adc hardware_dma hardware_timer hardware_irq hardware_clocks hardware_rtc tinyusb_device tinyusb_board)
 
 pico_enable_stdio_usb(${PROJECT_NAME} 1)
 pico_enable_stdio_uart(${PROJECT_NAME} 0)
