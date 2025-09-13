@@ -6,14 +6,14 @@ import time
 
 SAMPLE_COUNT = 32
 BYTES_TO_READ = SAMPLE_COUNT*2
-SAMPLE_TIME = 10
+SAMPLE_TIME = 5
 SAMPLE_RATE = 48000
 
 def transform(v: int) -> int:
     return v
 
 if __name__ == "__main__":
-    ser = serial.Serial("COM9", 1152000, xonxoff=False, rtscts=False, timeout=0.1, dsrdtr=False)
+    ser = serial.Serial("COM7", 1152000, xonxoff=False, rtscts=False, timeout=0.1, dsrdtr=False)
 
     #plt.ion()
     #fig = plt.figure()
